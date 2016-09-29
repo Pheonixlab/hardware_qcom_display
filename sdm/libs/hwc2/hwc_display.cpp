@@ -2039,6 +2039,16 @@ void HWCDisplay::MarkLayersForClientComposition() {
 void HWCDisplay::ApplyScanAdjustment(hwc_rect_t *display_frame) {
 }
 
+int HWCDisplay::CachePanelBrightness(int level) {
+  int ret = 0;
+  if (display_intf_)
+    ret = display_intf_->CachePanelBrightness(level);
+  else
+    ret = -EINVAL;
+
+  return ret;
+}
+
 int HWCDisplay::ToggleScreenUpdates(bool enable) {
   display_paused_ = enable ? false : true;
   callbacks_->Refresh(id_);

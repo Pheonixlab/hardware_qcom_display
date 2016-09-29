@@ -228,6 +228,7 @@ class HWCDisplay : public DisplayEventHandler {
   int ToggleScreenUpdates(bool enable);
   int ColorSVCRequestRoute(const PPDisplayAPIPayload &in_payload, PPDisplayAPIPayload *out_payload,
                            PPPendingParams *pending_action);
+  int CachePanelBrightness(int level);
   void SolidFillPrepare();
   void SolidFillCommit();
   DisplayClass GetDisplayClass();

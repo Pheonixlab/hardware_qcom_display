@@ -54,6 +54,7 @@ enum PendingAction {
   kEnableFrameCapture = BITMAP(6),
   kDisableFrameCapture = BITMAP(7),
   kConfigureDetailedEnhancer = BITMAP(8),
+  kInvalidatingAndkSetPanelBrightness = BITMAP(9),
   kModeSet = BITMAP(10),
   kMultiDispProc = BITMAP(11),
   kMultiDispGetId = BITMAP(12),

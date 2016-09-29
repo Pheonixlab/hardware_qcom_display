@@ -1774,6 +1774,10 @@ DisplayError HWDeviceDRM::SetVSyncState(bool enable) {
   return kErrorNotSupported;
 }
 
+DisplayError HWDeviceDRM::CachePanelBrightness(int level) {
+  return kErrorNotSupported;
+}
+
 void HWDeviceDRM::SetIdleTimeoutMs(uint32_t timeout_ms) {
   // TODO(user): This function can be removed after fb is deprecated
 }

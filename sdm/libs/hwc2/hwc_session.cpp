@@ -2300,6 +2300,16 @@ android::status_t HWCSession::QdcmCMDHandler(const android::Parcel *input_parcel
                                                 hwc_display_[display_id]);
           Refresh(display_id);
           break;
+        case kInvalidatingAndkSetPanelBrightness:
+          brightness = reinterpret_cast<float *>(resp_payload.payload);
+          if (brightness == NULL) {
+            DLOGE("Brightness value is Null");
+            return -EINVAL;
+          } else {
+            ret = INT(SetDisplayBrightness(static_cast<hwc2_device_t *>(this),
+                      static_cast<hwc2_display_t>(display_id), *brightness));
+         }
+          break;
         case kModeSet:
           ret = static_cast<int>
                   (hwc_display_[display_id]->RestoreColorTransform());
