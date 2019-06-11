@@ -75,7 +75,12 @@ include $(BUILD_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 
-LOCAL_MODULE                  := vendor.qti.hardware.display.composer@1.0-service
+LOCAL_MODULE                  := vendor.qti.hardware.display.composer-service
+LOCAL_MODULE_NAME	      := dolby_vision
+LOCAL_MODULE_TYPE 	      := cc_defaults
+LOCAL_CONFIG_NAMESPACE        := dolby_vision
+LOCAL_MODULE_VARIABLES        := enabled
+LOCAL_MODULE_PROPERTIES       := cflags
 LOCAL_VENDOR_MODULE           := true
 LOCAL_MODULE_RELATIVE_PATH    := hw
 LOCAL_MODULE_TAGS             := optional
@@ -84,7 +89,8 @@ LOCAL_HEADER_LIBRARIES        := display_headers
 
 LOCAL_CFLAGS                  := -Wno-missing-field-initializers -Wno-unused-parameter \
                                  -std=c++11 -fcolor-diagnostics \
-                                 -DLOG_TAG=\"SDM\" $(common_flags)
+                                 -DTARGET_SUPPORTS_DOLBY_VISION \
+                                 -DLOG_TAG=\"QtiComposer\" $(common_flags)
 LOCAL_CLANG                   := true
 
 LOCAL_SHARED_LIBRARIES        := libbinder libhardware libutils libcutils libsync \
@@ -92,6 +98,7 @@ LOCAL_SHARED_LIBRARIES        := libbinder libhardware libutils libcutils libsyn
                                  hwcomposer.$(TARGET_BOARD_PLATFORM) \
                                  vendor.display.config@1.0 liblog libfmq \
                                  vendor.qti.hardware.display.composer@1.0 \
+                                 vendor.qti.hardware.display.composer@2.0 \
                                  android.hardware.graphics.composer@2.1 \
                                  android.hardware.graphics.composer@2.2 \
                                  android.hardware.graphics.composer@2.3 \
@@ -167,7 +174,7 @@ endif
 
 LOCAL_SRC_FILES               := QtiComposer.cpp QtiComposerClient.cpp service.cpp \
                                  QtiComposerHandleImporter.cpp
-LOCAL_INIT_RC                 := vendor.qti.hardware.display.composer@1.0-service.rc
+LOCAL_INIT_RC                 := vendor.qti.hardware.display.composer-service.rc
 include $(BUILD_EXECUTABLE)
 
 endif

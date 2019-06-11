@@ -1534,19 +1534,44 @@ HWC2::Error HWCDisplay::GetHdrCapabilities(uint32_t *out_num_types, int32_t *out
     return HWC2::Error::None;
   }
 
-  if (out_types == nullptr) {
-    // We support HDR10, HLG and HDR10_PLUS.
-    *out_num_types = 3;
+  uint32_t num_types = 0;
+  if (fixed_info.hdr_plus_supported) {
+#ifdef TARGET_SUPPORTS_DOLBY_VISION
+    num_types = UINT32(Hdr::HDR10_PLUS);
   } else {
-    // HDR10, HLG and HDR10_PLUS are supported.
-    out_types[0] = HAL_HDR_HDR10;
-    out_types[1] = HAL_HDR_HLG;
-    out_types[2] = HAL_HDR_HDR10_PLUS;
+    num_types = UINT32(Hdr::HLG);
+  }
+
+  // We support DOLBY_VISION, HDR10, HLG and HDR10_PLUS.
+#else
+    num_types = UINT32(Hdr::HDR10_PLUS) - 1;
+  } else {
+    num_types = UINT32(Hdr::HLG) - 1;
+  }
+
+  // We support HDR10, HLG and HDR10_PLUS.
+#endif /* TARGET_SUPPORTS_DOLBY_VISION */
+  if (out_types == nullptr) {
+    *out_num_types = num_types;
+  } else {
+    uint32_t max_out_types = std::min(*out_num_types, num_types);
+    int32_t type = static_cast<int32_t>(Hdr::DOLBY_VISION);
+    for (int32_t i = 0; i < max_out_types; i++) {
+#ifndef TARGET_SUPPORTS_DOLBY_VISION
+      while (type == static_cast<int32_t>(Hdr::DOLBY_VISION) /* Skip list */) {
+        // Skip the type
+        type++;
+      }
+#endif /* TARGET_SUPPORTS_DOLBY_VISION */
+      if (type > (num_types + 1)) {
+        break;
+      }
+      out_types[i] = type++;
+    }
     *out_max_luminance = fixed_info.max_luminance;
     *out_max_average_luminance = fixed_info.average_luminance;
     *out_min_luminance = fixed_info.min_luminance;
   }
-
   return HWC2::Error::None;
 }
 
