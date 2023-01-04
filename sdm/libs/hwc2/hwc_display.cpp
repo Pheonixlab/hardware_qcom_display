@@ -1156,7 +1156,15 @@ HWC2::Error HWCDisplay::GetPerFrameMetadataKeys(uint32_t *out_num_keys,
   if (out_num_keys == nullptr) {
     return HWC2::Error::BadParameter;
   }
-  const uint32_t num_keys = UINT32(PerFrameMetadataKey::HDR10_PLUS_SEI) + 1;
+
+  DisplayConfigFixedInfo fixed_info = {};
+  display_intf_->GetConfig(&fixed_info);
+  uint32_t num_keys = 0;
+  if (fixed_info.hdr_plus_supported) {
+    num_keys = UINT32(PerFrameMetadataKey::HDR10_PLUS_SEI) + 1;
+  } else {
+    num_keys = UINT32(PerFrameMetadataKey::MAX_FRAME_AVERAGE_LIGHT_LEVEL) + 1;
+  }
   if (out_keys == nullptr) {
     *out_num_keys = num_keys;
   } else {

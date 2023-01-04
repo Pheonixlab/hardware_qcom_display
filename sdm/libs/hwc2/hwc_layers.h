@@ -142,6 +142,7 @@ class HWCLayer {
   bool non_integral_source_crop_ = false;
   bool has_metadata_refresh_rate_ = false;
   bool buffer_flipped_ = false;
+  bool per_frame_hdr_metadata_ = false;  // used to track if perframe metadata and blob is set.
 #ifdef FOD_ZPOS
   bool fod_pressed_ = false;
 #endif

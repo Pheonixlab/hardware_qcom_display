@@ -934,6 +934,11 @@ bool HWCLayer::IsDataSpaceSupported() {
 }
 
 void HWCLayer::ValidateAndSetCSC(const private_handle_t *handle) {
+  if (per_frame_hdr_metadata_) {
+    // Since client has set PerFrameMetadata, dataspace will be valid
+    // so we can skip reading from ColorMetaData.
+    return;
+  }
   LayerBuffer *layer_buffer = &layer_->input_buffer;
   bool use_color_metadata = true;
   ColorMetaData csc = {};
@@ -1011,7 +1016,10 @@ void HWCLayer::ValidateAndSetCSC(const private_handle_t *handle) {
         layer_buffer->color_metadata.cRI = new_metadata.cRI;
         layer_->update_mask.set(kMetadataUpdate);
       }
-      if (new_metadata.dynamicMetaDataValid &&
+      DLOGV_IF(kTagClient, "Dynamic Metadata valid = %d size = %d",
+               layer_buffer->color_metadata.dynamicMetaDataValid,
+               layer_buffer->color_metadata.dynamicMetaDataLen);
+      if (layer_buffer->color_metadata.dynamicMetaDataValid &&
           !SameConfig(layer_buffer->color_metadata.dynamicMetaDataPayload,
           new_metadata.dynamicMetaDataPayload, HDR_DYNAMIC_META_DATA_SZ)) {
           layer_buffer->color_metadata.dynamicMetaDataValid = true;
